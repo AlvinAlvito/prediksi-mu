@@ -26,6 +26,13 @@ class AnalysisRun extends Model
         'recall',
         'f1_score',
         'evaluation',
+        'algorithm',
+        'feature_extractor',
+        'training_sample_count',
+        'testing_sample_count',
+        'run_config',
+        'started_at',
+        'finished_at',
     ];
 
     protected function casts(): array
@@ -35,10 +42,13 @@ class AnalysisRun extends Model
             'video_ids' => 'array',
             'video_metadata' => 'array',
             'evaluation' => 'array',
+            'run_config' => 'array',
             'accuracy' => 'float',
             'precision' => 'float',
             'recall' => 'float',
             'f1_score' => 'float',
+            'started_at' => 'datetime',
+            'finished_at' => 'datetime',
         ];
     }
 

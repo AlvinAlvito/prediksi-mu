@@ -45,8 +45,7 @@ class TextPreprocessingService
     {
         $cleaned = $this->clean($text);
         $caseFolded = mb_strtolower($cleaned, 'UTF-8');
-        $normalized = strtr($caseFolded, $this->normalizationMap);
-        $tokens = $this->tokenize($normalized);
+        $tokens = $this->normalizeTokens($this->tokenize($caseFolded));
         $filteredTokens = array_values(array_filter($tokens, fn (string $token): bool => ! in_array($token, $this->stopwords, true)));
         $stemmedText = $this->stemmerFactory->createStemmer()->stem(implode(' ', $filteredTokens));
         $stemmedTokens = array_values(array_filter($this->tokenize($stemmedText)));
@@ -79,5 +78,21 @@ class TextPreprocessingService
             preg_split('/\s+/u', trim($text)) ?: [],
             fn (string $token): bool => $token !== ''
         ));
+    }
+
+    private function normalizeTokens(array $tokens): array
+    {
+        $normalized = [];
+
+        foreach ($tokens as $token) {
+            $collapsedToken = preg_replace('/(.)\1{2,}/u', '$1$1', $token) ?? $token;
+            $mapped = $this->normalizationMap[$collapsedToken] ?? $collapsedToken;
+
+            foreach ($this->tokenize($mapped) as $mappedToken) {
+                $normalized[] = $mappedToken;
+            }
+        }
+
+        return $normalized;
     }
 }

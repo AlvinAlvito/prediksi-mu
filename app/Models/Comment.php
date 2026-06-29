@@ -22,6 +22,13 @@ class Comment extends Model
         'tokens',
         'predicted_sentiment',
         'scores',
+        'video_record_id',
+        'youtube_comment_id',
+        'comment_url',
+        'like_count',
+        'reply_count',
+        'is_processed',
+        'raw_payload',
     ];
 
     protected function casts(): array
@@ -30,6 +37,8 @@ class Comment extends Model
             'published_at' => 'datetime',
             'tokens' => 'array',
             'scores' => 'array',
+            'is_processed' => 'boolean',
+            'raw_payload' => 'array',
         ];
     }
 

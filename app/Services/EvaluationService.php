@@ -16,6 +16,13 @@ class EvaluationService
         $test = [];
 
         foreach ($grouped as $items) {
+            usort($items, function (array $left, array $right): int {
+                $leftHash = md5(json_encode($left, JSON_UNESCAPED_UNICODE));
+                $rightHash = md5(json_encode($right, JSON_UNESCAPED_UNICODE));
+
+                return $leftHash <=> $rightHash;
+            });
+
             $count = count($items);
             $testCount = max(1, (int) round($count * $testRatio));
             $testCount = min($testCount, max(1, $count - 1));
